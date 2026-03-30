@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${env:USERPROFILE}/.platformio/packages/toolchain-atmelavr/**",
+                "${env:USERPROFILE}/.platformio/packages/framework-arduino-avr/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "__AVR_ATmega2560__",
+                "F_CPU=16000000L",
+                "ARDUINO=10819"
+            ],
+            "compilerPath": "${env:USERPROFILE}/.platformio/packages/toolchain-atmelavr/bin/avr-gcc.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
