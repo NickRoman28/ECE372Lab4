@@ -72,7 +72,11 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
 
         //STOP MOTOR (turn off voltage source to it? turn signal to 0
         changeDutyCycle(0);
-        disableSwitchINT(); //NEED TO MAKE THIS CODE
+   //     disableSwitchINT(); //NEED TO MAKE THIS CODE -> should be fixed
+        
+         //DONE BY NOAH 4/5/26
+        EIMSK &= ~(1 << INT0);   //BY NOAH: THIS LINE WILL DIABLE INTERUPT FLAGS FROM BEING MADE
+        
         //countdown(); need to make a code for the countdown?
         
         state = STATE_COUNTDOWN;
@@ -96,7 +100,13 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
         i = 9;
         countdowndone = 0;
 
-        enableSwitchINT();
+     //   enableSwitchINT();   
+        //DONE BY NOAH 4/5/26
+           EIFR |= (1 << INTF0);   // clear any pending interrupt flag (VERY important)
+            EIMSK |= (1 << INT0);   // ENABLES INTERUPT FLAG 
+
+
+        
         state = STATE_RUNNING;
       }
   }
