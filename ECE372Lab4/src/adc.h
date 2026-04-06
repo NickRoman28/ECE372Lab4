@@ -3,5 +3,6 @@
 
 
 void initADC();
+unsigned int readADC(void);
 
 #endif
