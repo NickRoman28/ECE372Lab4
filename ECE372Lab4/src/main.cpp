@@ -21,6 +21,7 @@ State_t state = STATE_RUNNING;
 
 volatile SwitchState_t switchState = SWITCH_WAIT_PRESS;
 volatile unsigned char switchEvent = 0;
+volatile unsigned char second = 0; //keeps track of timer 1 for global interrupt.
 
 
 
@@ -92,13 +93,17 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
       //FIXMEFIXMEFIXME
       //OCR0A = 62500 for 1 second delay timer 1, 16Mhz/256
       //
-      while(countdowndone == 0){
-        displayDigit(i);
-        i--;
-        if(i == 0) {
-          countdowndone = 1;
-        }
-      }
+     if (second) {
+       second = 0;
+
+       if (i>=0) {
+         i--;
+         displayDigit(i);
+       }
+       else {
+         countdown = 1;
+       }
+     }
       
 
       
@@ -136,4 +141,8 @@ ISR(INT0_vect) {
         break;
           
     }
+}
+
+ISR(TIMER1_COMPA_vect) {
+  second = 1;
 }
