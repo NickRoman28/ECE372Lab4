@@ -37,3 +37,28 @@ void initADC(){
   // 9. start the first ADC conversion
   ADCSRA |= ( 1 << ADSC);
 }
+
+unsigned int readADC(void) {
+
+    // LECTURE 15 CODE
+    unsigned char low;
+    unsigned char high;
+    unsigned int result;
+
+    // start the first ADC conversion
+    ADCSRA |= (1 << ADSC);
+
+    // Wait until conversion finishes
+    while (ADCSRA & (1 << ADSC)) {
+    }
+
+    // Read low byte first, then high byte
+    // ADCL will be read first followed by ADCH
+    low = ADCL;
+    high = ADCH;
+
+    // both the low and high into one 10 bit unsigned integer
+    result = ((unsigned int)high << 8) | low;
+
+    return result;
+}
