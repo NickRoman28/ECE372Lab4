@@ -19,8 +19,8 @@ typedef enum {
 // controls time delay for button being pressed for timer0.
 State_t state = STATE_RUNNING;
 
-volaitile SwitchState_t switchState = SWITCH_WAIT_PRESS;
-volaitile unsigned char switchEvent = 0;
+volatile SwitchState_t switchState = SWITCH_WAIT_PRESS;
+volatile unsigned char switchEvent = 0;
 
 
 
@@ -29,12 +29,14 @@ int main() {
 initTimer0();
 initTimer1();
 initADC();
-initPWM();
+initPWMTimer3();
 initSwitchINT();
 init7Seg();
 
 sei();
 unsigned int adcVal = readADC();
+unsigned char i = 9;
+int countdowndone = 0;
 
 //GET PINS RIGHT//
   while(1) {
@@ -60,28 +62,44 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
     
     
     if (state == STATE_RUNNING) {
-  //put motor code here 
-      //adcVal = readADC()
-      //PWM based off adcVal
+      //motor is on until button is pressed.
+
+      adcVal = readADC(); //gets signal for PWM
+      changeDutyCycle(adcVal); //changes the duty cycle from ADC for the PWM for motor
+      
       if(switchEvent) {
         switchEvent = 0;
 
-        //STOP MOTOR (turn off voltage source to it? turn signal to 0?
-        //STOPMOTOR();
+        //STOP MOTOR (turn off voltage source to it? turn signal to 0
+        changeDutyCycle(0);
         disableSwitchINT(); //NEED TO MAKE THIS CODE
-        //countdown();
+        //countdown(); need to make a code for the countdown?
+        
         state = STATE_COUNTDOWN;
       }
     }
+      
     else if (state == STATE_COUNTDOWN) {
-      //motor must remain off, cannot be turned on until countdown is done
+      
+      //BUTTON IS PRESSED, motor must remain off, cannot be turned on until countdown is done
+      while(countdowndone == 0){
+        displayDigit(i);
+        i--;
+        if(i == 0) {
+          countdowndone = 1;
+        }
+      }
+      
 
-      if(countdown == 1); //not sure how to do this yet
-      countdown = 0;
+      
+      if(countdowndone == 1){ //not sure how to do this yet
+        i = 9;
+        countdowndone = 0;
 
-      enableSwitchINT();
-      state = STATE_RUNNING;
-    }
+        enableSwitchINT();
+        state = STATE_RUNNING;
+      }
+  }
   }
 }
   return 0;
