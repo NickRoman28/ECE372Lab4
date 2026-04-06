@@ -41,10 +41,4 @@ void changeDutyCycle(unsigned int adcVal)
     // takes the adc value and converts it into PWM duty cycle
     OCR3A = adcVal;
 }
-#ifndef PWM_H
-#define PWM_H
 
-void initPWM3(void);
-void changeDutyCycle(unsigned int adcVal);
-
-#endif
