@@ -29,7 +29,7 @@ volatile unsigned char second = 0; //keeps track of timer 1 for global interrupt
 
 
 int main() {
-  //initialize everything (timer, pwm, ssd, motor, etc)
+  //initialize everything timers, adc, pwm, switch, 7seg
 initTimer0();
 initTimer1();
 initADC();
@@ -37,8 +37,8 @@ initPWM3();
 initSwitchPD0();
 init7Seg();
 
-DDRH |= (1 << DDH3);   // digital pin 7 output
-DDRH |= (1 << DDH4);   // digital pin 8 output
+DDRH |= (1 << DDH3);   // digital pin 6 output
+DDRH |= (1 << DDH4);   // digital pin 7 output
 
 sei();
 unsigned int adcVal = readADC();
@@ -75,22 +75,22 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
       // dead zone around 2.5V
 if (adcVal >= 500 && adcVal <= 524) {
     // stop motor
-    PORTH &= ~(1 << PH3);   // pin 7 LOW
-    PORTH &= ~(1 << PH4);   // pin 8 LOW
+    PORTH &= ~(1 << PH3);   // pin 6 LOW
+    PORTH &= ~(1 << PH4);   // pin 7 LOW
     changeDutyCycle(0);
 }
 else if (adcVal < 500) {
     // clockwise
-    PORTH |= (1 << PH3);    // pin 7 HIGH
-    PORTH &= ~(1 << PH4);   // pin 8 LOW
+    PORTH |= (1 << PH3);    // pin 6 HIGH
+    PORTH &= ~(1 << PH4);   // pin 7 LOW
 
     // lower voltage = faster
     changeDutyCycle((500 - adcVal) * 2);
 }
 else {
     // counterclockwise
-    PORTH &= ~(1 << PH3);   // pin 7 LOW
-    PORTH |= (1 << PH4);    // pin 8 HIGH
+    PORTH &= ~(1 << PH3);   // pin 6 LOW
+    PORTH |= (1 << PH4);    // pin 7 HIGH
 
     // higher voltage = faster
     changeDutyCycle((adcVal - 524) * 2);
@@ -100,12 +100,12 @@ else {
         switchEvent = 0;
         //STOP MOTOR (turn off voltage source to it? turn signal to 0
         changeDutyCycle(0);
-   //     disableSwitchINT(); //NEED TO MAKE THIS CODE -> should be fixed
         
          //DONE BY NOAH 4/5/26
         EIMSK &= ~(1 << INT0);   //BY NOAH: THIS LINE WILL DIABLE INTERUPT FLAGS FROM BEING MADE
         
-        //countdown(); need to make a code for the countdown?
+        // countdown logic by NICK
+        // will count down from 9 to 0 with 1 second delay in between, then turn on motor again and reset state to running
         i = 9;
         countdowndone = 0;
         second =0;
@@ -119,12 +119,11 @@ else {
       changeDutyCycle(0);
       
       //BUTTON IS PRESSED, motor must remain off, cannot be turned on until countdown is done
-      //FIXMEFIXMEFIXME
       //OCR0A = 62500 for 1 second delay timer 1, 16Mhz/256
-      //
      if (second) {
        second = 0;
 
+       // keep counting down until 0 is hit and then turn the motor back on
        if (i>0) {
          i--;
          displayDigit(i);
@@ -136,7 +135,7 @@ else {
       
 
       
-      if(countdowndone){ //not sure how to do this yet
+      if(countdowndone){ 
         
       stopTimer1(); //NEW
         
