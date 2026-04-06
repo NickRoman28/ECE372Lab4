@@ -16,7 +16,7 @@ void initTimer1(){
     TCCR1B |=  (1 << WGM12);
 
     // sets the compare value for 1us clock with prescaler 1
-    OCR1A = 15;
+    OCR1A = 62499;
     // start with the timer being off 
     TCCR1B &= ~((1 << CS12) | (1 << CS11) | (1 << CS10));
     TIFR1 |= (1 << OCF1A); 
@@ -26,7 +26,7 @@ void initTimer1(){
 */
 void delayUs(unsigned int delay){
     // start timer with prescaler 1
-    TCCR1B = (TCCR1B & ~((1 << CS12) | (1 << CS11) | (1 << CS10))) | (1 << CS10);
+    TCCR1B = (TCCR1B & ~((1 << CS12) | (1 << CS11) | (1 << CS10))) | (1 << CS12);
 
     while (delay > 0) {
         // reset counter
