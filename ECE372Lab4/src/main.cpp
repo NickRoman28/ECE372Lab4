@@ -78,14 +78,20 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
         EIMSK &= ~(1 << INT0);   //BY NOAH: THIS LINE WILL DIABLE INTERUPT FLAGS FROM BEING MADE
         
         //countdown(); need to make a code for the countdown?
-        
+        i = 9
+        countdowndone = 0;
+        displayDigit(i);
         state = STATE_COUNTDOWN;
       }
     }
       
     else if (state == STATE_COUNTDOWN) {
+      changeDutyCycle(0);
       
       //BUTTON IS PRESSED, motor must remain off, cannot be turned on until countdown is done
+      //FIXMEFIXMEFIXME
+      //OCR0A = 62500 for 1 second delay timer 1, 16Mhz/256
+      //
       while(countdowndone == 0){
         displayDigit(i);
         i--;
@@ -96,9 +102,9 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
       
 
       
-      if(countdowndone == 1){ //not sure how to do this yet
-        i = 9;
-        countdowndone = 0;
+      if(countdowndone){ //not sure how to do this yet
+  
+        clearDisplay(); //clears the display
 
      //   enableSwitchINT();   
         //DONE BY NOAH 4/5/26
