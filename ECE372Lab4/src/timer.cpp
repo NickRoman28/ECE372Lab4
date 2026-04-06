@@ -5,6 +5,10 @@
 //----------------------------------------------------------------------//
 
 #include "timer.h"
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+extern volatile unsigned char second;
 //You many use any timer you wish for the microsecond delay and the millisecond delay
 
 
@@ -68,7 +72,7 @@ void stopTimer1() {
 }
 
 ISR(TIMER1_COMPA_vect) {
-    oneSecondElapsed = 1;
+    second = 1;
 }
 
 //__________________________________________________________________________________________
