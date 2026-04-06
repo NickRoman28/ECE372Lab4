@@ -3,6 +3,9 @@
 #include <avr/interrupt.h>
 #include "switch.h"
 #include "timer.h"
+#include "adc.h" 
+#include "pwm.h" 
+#include "sevensegment.h"
 
 typedef enum {
   STATE_RUNNING,
@@ -31,8 +34,11 @@ initTimer0();
 initTimer1();
 initADC();
 initPWM3();
-initSwitchINT();
+initSwitchPD0();
 init7Seg();
+
+DDRH |= (1 << DDH3);   // digital pin 7 output
+DDRH |= (1 << DDH4);   // digital pin 8 output
 
 sei();
 unsigned int adcVal = readADC();
@@ -66,7 +72,29 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
       //motor is on until button is pressed.
 
       adcVal = readADC(); //gets signal for PWM
-      changeDutyCycle(adcVal); //changes the duty cycle from ADC for the PWM for motor
+      // dead zone around 2.5V
+if (adcVal >= 500 && adcVal <= 524) {
+    // stop motor
+    PORTH &= ~(1 << PH3);   // pin 7 LOW
+    PORTH &= ~(1 << PH4);   // pin 8 LOW
+    changeDutyCycle(0);
+}
+else if (adcVal < 500) {
+    // clockwise
+    PORTH |= (1 << PH3);    // pin 7 HIGH
+    PORTH &= ~(1 << PH4);   // pin 8 LOW
+
+    // lower voltage = faster
+    changeDutyCycle((500 - adcVal) * 2);
+}
+else {
+    // counterclockwise
+    PORTH &= ~(1 << PH3);   // pin 7 LOW
+    PORTH |= (1 << PH4);    // pin 8 HIGH
+
+    // higher voltage = faster
+    changeDutyCycle((adcVal - 524) * 2);
+}
       
       if(switchEvent) {
         switchEvent = 0;
@@ -146,5 +174,4 @@ ISR(INT0_vect) {
           
     }
 }
-
 
