@@ -26,7 +26,7 @@ void initTimer1(){
 */
 void delaySeconds(unsigned int delay){
     // start timer with prescaler 1
-    TCCR1B = (TCCR1B & ~((1 << CS12) | (1 << CS11) | (1 << CS10))) | (1 << CS10);
+    TCCR1B = (TCCR1B & ~((1 << CS12) | (1 << CS11) | (1 << CS10))) | (1 << CS12);
 
     while (delay > 0) {
         // reset counter
