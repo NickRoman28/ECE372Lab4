@@ -1,41 +1,32 @@
-#include "adc.h"
 #include <avr/io.h>
+#include "adc.h"
 
-void initADC(){
-//NOT SURE IF FULLY WORKING
-  // 1. ADC MUX register set reference voltage set to AVCC = 5V output. 
-  ADMUX |= (1 << REFS0);
-  ADMUX &= ~(1 << REFS1);
-   // 2. ADCH &ADCL Setting
-  // determine left or right justified (ADLAR = 0 RIGHT JUSTIFIED)
-  ADMUX &= ~(1 << ADLAR);
+void initADC(void) {
 
-  // 3. Choose Analog Pin for I/P
-  // Specify ADC input channel and mode
-  //Set ADC7 as single-ended input with MUX[5:0] = 0b000111
-  ADMUX &= ~((1 << MUX2) | (1 << MUX1) | (1 << MUX0) | ((1 << MUX4) | (1 << MUX3) | (1<<MUX5)); // A0 ->  1b000000 (set all muxes to zero)
-  
+    // clear any bits that are previously stored
+    ADMUX = 0x00;
 
-  // 4. enable ADC and 5. enable auto-triggering
-  ADCSRA|= (1 << ADEN) | (1 << ADATE);
+    // AVCC = 5V output LECTURE 15 CODE
+    ADMUX |= (1 << REFS0);
+    ADMUX &= ~(1 << REFS1);
 
-  // 6. set Auto Trigger Source Selection
-  // Use free-running mode ADTS[2:0] = 0b000 
-  ADCSRB &= ~((1 << ADTS2) | (1 << ADTS1) | (1 << ADTS0));
+    // determine left or right justified (ADLAR = 0 RIGHT JUSTIFIED)
+    // use right adjustment because we want all 10 bits
+    ADMUX &= ~(1 << ADLAR);
 
+    //Set ADC0 as single-ended input with MUX[5:0] = 0b00000
+    ADMUX &= ~((1 << MUX0) | (1 << MUX1) | (1 << MUX2) | (1 << MUX3) | (1 << MUX4));
 
-   // 7. ADC Sample Rate/ Frequency
-  // set the ADC clock frequemcy.  Use a pre-scaler of 128
-  // ADC clock frequency is 16 Mhz divided by pre-scaler = 125KHz
-  // Sampling rate is 1/ ((1/125K Hz )*(13 clock cycles)) = 9615 KHz
-  ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
-  
+    // Enable ADC and disable auto triggering
+    ADCSRA|= (1 << ADEN);
+    ADCSRA &= ~(1 << ADATE);
 
-  //8.  disable ADC0 pin digital input - pin A0 on board
-  DIDR0 |= (1 << ADC0D);
+    // ADC clock frequency is 16 Mhz divided by pre-scaler = 125KHz
+    // Sampling rate is fs=13 f_ADC = (13 clock cycles)*125K Hz = 9.615 KHz
+    ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 
-  // 9. start the first ADC conversion
-  ADCSRA |= ( 1 << ADSC);
+    // enable analog ADC pins and disable ADC0 pin digital input 
+    DIDR0 |= (1 << ADC0D);
 }
 
 unsigned int readADC(void) {
