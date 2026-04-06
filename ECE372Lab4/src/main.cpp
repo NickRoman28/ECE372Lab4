@@ -30,7 +30,7 @@ int main() {
 initTimer0();
 initTimer1();
 initADC();
-initPWMTimer3();
+initPWM3();
 initSwitchINT();
 init7Seg();
 
