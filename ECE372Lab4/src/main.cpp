@@ -147,6 +147,4 @@ ISR(INT0_vect) {
     }
 }
 
-ISR(TIMER1_COMPA_vect) {
-  second = 1;
-}
+
