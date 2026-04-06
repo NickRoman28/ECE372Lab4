@@ -18,6 +18,6 @@ void stopTimer1();
 void initTimer0();
 void delayMs(unsigned int delay); 
 
-extern volatile unsigned char oneSecondElapsed;
+extern volatile unsigned char second;
 
 #endif
