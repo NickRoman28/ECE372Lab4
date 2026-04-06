@@ -19,7 +19,15 @@ void initTimer1(){
     OCR1A = 62499;
     // start with the timer being off 
     TCCR1B &= ~((1 << CS12) | (1 << CS11) | (1 << CS10));
+
+	//FOLLOWING IS NEW________________________________________________
+
+	TIMSK1 |= (1 << OCI1A);
+
+	//Clears compare flag just in case
     TIFR1 |= (1 << OCF1A); 
+
+//	___________________________________________________________________
 }
 
 /* This delays the program an amount of microseconds specified by unsigned int delay.
@@ -43,6 +51,32 @@ void delaySeconds(unsigned int delay){
     // stop timer
     TCCR1B &= ~((1 << CS12) | (1 << CS11) | (1 << CS10));
 }
+
+//FOLLOWING IS NEW_______________________________________________________________
+
+void startTimer1() {
+    TCNT1 = 0;
+    TIFR1 |= (1 << OCF1A);
+
+    // Prescaler = 256
+    TCCR1B &= ~((1 << CS11) | (1 << CS10));
+    TCCR1B |= (1 << CS12);
+}
+
+void stopTimer1() {
+    TCCR1B &= ~((1 << CS12) | (1 << CS11) | (1 << CS10));
+}
+
+ISR(TIMER1_COMPA_vect) {
+    oneSecondElapsed = 1;
+}
+
+//__________________________________________________________________________________________
+
+
+
+
+
 
 /* Initialize timer 0, you should not turn the timer on here.
 * You will need to use CTC mode */
