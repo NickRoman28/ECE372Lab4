@@ -1,3 +1,6 @@
+// LAB4 ECE372
+// NICK ROMAN, AIDAN DEOGRACIAS, NOAH MONROE, ANDREW GHARTEY
+// COMPLETED 4/6/26
 // Description: This file implements the initialization of an external
 // switch.
 //----------------------------------------------------------------------//
