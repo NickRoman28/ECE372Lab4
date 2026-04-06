@@ -22,7 +22,7 @@ void initTimer1(){
 
 	//FOLLOWING IS NEW________________________________________________
 
-	TIMSK1 |= (1 << OCI1A);
+	TIMSK1 |= (1 << OCIE1A);
 
 	//Clears compare flag just in case
     TIFR1 |= (1 << OCF1A); 
