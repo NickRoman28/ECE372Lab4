@@ -24,7 +24,7 @@ void initTimer1(){
 
 /* This delays the program an amount of microseconds specified by unsigned int delay.
 */
-void delayUs(unsigned int delay){
+void delaySeconds(unsigned int delay){
     // start timer with prescaler 1
     TCCR1B = (TCCR1B & ~((1 << CS12) | (1 << CS11) | (1 << CS10))) | (1 << CS10);
 
