@@ -1,3 +1,6 @@
+// LAB4 ECE372
+// NICK ROMAN, AIDAN DEOGRACIAS, NOAH MONROE, ANDREW GHARTEY
+// COMPLETED 4/6/26
 #include <avr/io.h>
 #include "pwm.h"
 
@@ -41,4 +44,3 @@ void changeDutyCycle(unsigned int adcVal)
     // takes the adc value and converts it into PWM duty cycle
     OCR3A = adcVal;
 }
-
