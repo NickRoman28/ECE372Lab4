@@ -10,8 +10,14 @@
 #include <avr/io.h>
 
 void initTimer1();
-void delayUs(unsigned int delay);
+void delaySeconds(unsigned int delay);
+
+void startTimer1();
+void stopTimer0();
+
 void initTimer0();
 void delayMs(unsigned int delay); 
+
+extern volatile unsigned char oneSecondElapsed;
 
 #endif
