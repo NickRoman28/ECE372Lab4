@@ -70,7 +70,6 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
       
       if(switchEvent) {
         switchEvent = 0;
-
         //STOP MOTOR (turn off voltage source to it? turn signal to 0
         changeDutyCycle(0);
    //     disableSwitchINT(); //NEED TO MAKE THIS CODE -> should be fixed
@@ -79,9 +78,11 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
         EIMSK &= ~(1 << INT0);   //BY NOAH: THIS LINE WILL DIABLE INTERUPT FLAGS FROM BEING MADE
         
         //countdown(); need to make a code for the countdown?
-        i = 9
+        i = 9;
         countdowndone = 0;
+        second =0;
         displayDigit(i);
+        startTimer1();  //NEW CHANG EBY NOAH FOR TIMER
         state = STATE_COUNTDOWN;
       }
     }
@@ -96,19 +97,21 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
      if (second) {
        second = 0;
 
-       if (i>=0) {
+       if (i>0) {
          i--;
          displayDigit(i);
        }
        else {
-         countdown = 1;
+         countdowndone = 1;
        }
      }
       
 
       
       if(countdowndone){ //not sure how to do this yet
-  
+        
+      stopTimer1(); //NEW
+        
         clearDisplay(); //clears the display
 
      //   enableSwitchINT();   
@@ -122,9 +125,10 @@ if(switchState == SWITCH_DEBOUNCE_PRESS) {
       }
   }
   }
-}
   return 0;
 }
+  
+
 
 
 
