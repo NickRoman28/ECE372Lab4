@@ -8,7 +8,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-extern volatile unsigned char second;
+extern volatile unsigned char ms;
 //You many use any timer you wish for the microsecond delay and the millisecond delay
 
 
@@ -19,8 +19,8 @@ void initTimer1(){
     TCCR1B &= ~(1 << WGM13);
     TCCR1B |=  (1 << WGM12);
 
-    // sets the compare value for 1us clock with prescaler 1
-    OCR1A = 62499;
+    // sets the compare value for 1ms clock
+    OCR1A = 249;
     // start with the timer being off 
     TCCR1B &= ~((1 << CS12) | (1 << CS11) | (1 << CS10));
 
@@ -36,7 +36,7 @@ void initTimer1(){
 
 /* This delays the program an amount of microseconds specified by unsigned int delay.
 */
-void delaySeconds(unsigned int delay){
+void delayMs(unsigned int delay){
     // start timer with prescaler 1
     TCCR1B = (TCCR1B & ~((1 << CS12) | (1 << CS11) | (1 << CS10))) | (1 << CS12);
 
