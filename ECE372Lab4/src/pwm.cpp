@@ -4,10 +4,10 @@
 #include <avr/io.h>
 #include "pwm.h"
 
-void initPWM3(void)
-{
+void initPWM() {
     // we have to edit the OCRnA registers
-     // digital pin 5
+    
+     // digital pin 5  (SAME AS LAB 4 THIS IS GOOD TO GO)
     DDRE |= (1 << DDE3);
 
     // Clear timer registers first using timer3
@@ -33,7 +33,7 @@ void initPWM3(void)
     OCR3A = 0;
 }
 
-void changeDutyCycle(unsigned int adcVal)
+/* void changeDutyCycle(unsigned int adcVal)
 {
     // set the value to a 10 bit range
     if (adcVal > 1023)
@@ -43,4 +43,13 @@ void changeDutyCycle(unsigned int adcVal)
 
     // takes the adc value and converts it into PWM duty cycle
     OCR3A = adcVal;
+}
+*/
+
+
+
+// WILL HAVE TO CONFIRM THAT THESE NUMBERS ARE RIGHT (WILL DELETE THIS MESSAGE WHEN COMPELTE)
+void incFrequency(unsigned int frequency) {
+OCR4A = 16000000 / frequency; //update the TOP based on the new frequency
+OCR4C=0.5*OCR4A;// update the OCR4C to make sure the Duty cycle stay the same
 }
